@@ -1,3 +1,5 @@
+## Creation of an API in this notebook, then tranlating it in an mcp server with the code FastMCP.from_fastapi(app=app)
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
@@ -35,7 +37,7 @@ async def root():
     return {"message": "Workshop SmolAgents MCP API", "version": "1.0.0"}
 
 # TODO: name the endpoint
-@app.post("/...", response_model=str)
+@app.post("/query_events", response_model=str) # Giving a name to the endpoint
 async def query_events_db(request: QueryRequest):
     """
     Query the events database with SQL.
@@ -58,7 +60,7 @@ async def query_events_db(request: QueryRequest):
     return output
 
 # TODO: name the endpoint
-@app.post("/...", response_model=WebSearchResponse)
+@app.post("/web-search", response_model=WebSearchResponse)
 async def web_search(request: WebSearchRequest):
     """
     Search the web using DuckDuckGo and return the top 3 results.
@@ -70,7 +72,7 @@ async def web_search(request: WebSearchRequest):
     return WebSearchResponse(results=results)
 
 # TODO: name the endpoint
-@app.post("/...", response_model=str)
+@app.post("/summarize-url", response_model=str)
 async def summarize_url(request: SummarizeUrlRequest):
     """
     Download and summarize the readable text content of a webpage.
@@ -97,7 +99,8 @@ async def health_check():
     return {"status": "healthy"}
 
 # TODO: convert the FastAPI app to a FastMCP app using FastMCP.from_fastapi
-mcp = ...
+mcp = FastMCP.from_fastapi(app=app)
 
 if __name__ == "__main__":
     # TODO: run the mcp server using the `run` method of the mcp object
+    mcp.run()
