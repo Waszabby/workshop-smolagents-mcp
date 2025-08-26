@@ -40,7 +40,7 @@ def query_events_db(query: str) -> str:
     output = ""
     with engine.connect() as con:
         # TODO: Execute the query using con.execute and the `text` function
-        rows = con.execute(...)
+        rows = con.execute(text(query))
         for row in rows:
             output += "\n" + str(row)
     return output
@@ -51,17 +51,17 @@ def web_search(query: str) -> str:
     Search the web using DuckDuckGo and return the top 3 results with title and URL.
 
     Args:
-        query: ...
+        query: Search query to submit to the engine.
     
     Returns:
-        ...
+        A short list of search results and links
     """
     results = []
     with DDGS() as ddgs:
         for r in ddgs.text(query, region="wt-wt", safesearch="Off", max_results=3):
             results.append(f"- {r['title']} ({r['href']})")
     # TODO: transform the list of results into a "\n"-separated string using str.join
-    return ...
+    return "\n".join(results)
 
 @tool
 def summarize_url(url: str) -> str:
@@ -83,7 +83,7 @@ def summarize_url(url: str) -> str:
 
         # TODO: Remove scripts and styles using tag.decompose()
         for tag in soup(["script", "style", "noscript"]):
-            ...
+            tag.decompose() # What does it do??
 
         # Extract visible text
         text = soup.get_text(separator="\n", strip=True)
